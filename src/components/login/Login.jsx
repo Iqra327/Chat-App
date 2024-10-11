@@ -53,7 +53,7 @@ function Login() {
     if(!avatar.file) return toast.warn('Please upload an avatar!');
 
     const usersRef = collection(db, 'users');
-    const q = query(usersRef, where('username', '===', username));
+    const q = query(usersRef, where('username', '==', username));
     const querySnapshot = await getDocs(q);
     if(!querySnapshot.empty){
       return toast.warn('Select another username');

@@ -1,15 +1,42 @@
 import React from 'react'
 import './detail.css';
-import { auth } from '../../lib/firebase';
+import { auth, db } from '../../lib/firebase';
+import { useChatStore } from '../../lib/chatStore';
+import { useUserStore } from '../../lib/userStore';
+import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore';
 
 function Detail() {
+
+  const {chatId, user, isCurrentUserBlocked, isReceiverBlocked, changeBlock} = useChatStore();
+
+  const {currentUser}  =useUserStore();
+  
+  const handleBlock = async () => {
+    if(!user) return ;
+
+    const userDocRef = doc(db, 'users', currentUser.id)
+
+    try {
+      await updateDoc(userDocRef,{
+        blocked: isReceiverBlocked ? arrayRemove(user.id) : arrayUnion(user.id)
+      });
+      changeBlock()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleLogout = () => {
+    auth.signOut();
+    resetChat();
+  }
 
   return (
     <div className='detail'>
       <div className="user">
-        <img src="./avatar.png" alt="profile-img" />
-        <h2>Iqra Rasheed</h2>
-        <p>Just Keep and Trust Allah's Plan. You will make it one day.</p>
+        <img src={user?.avatar || './avatar.png'} alt="profile-img" />
+        <h2>{user?.username}</h2>
+        <p>Just Keep Going and Trust Allah's Plan. You will make it one day.</p>
       </div>
       <div className="info">
         <div className="option">
@@ -52,11 +79,18 @@ function Detail() {
             <img src="./arrowUp.png" alt="icon" />
           </div>
         </div>
-        <button>Block User</button>
-        <button className='logout' onClick={() => auth.signOut()}>Logout</button>
+        <button onClick={handleBlock}>
+          { isCurrentUserBlocked 
+            ? "You are Blocked!" 
+            : isReceiverBlocked
+            ? "User blocked" 
+            : "Block User"
+          }
+          </button>
+        <button className='logout' onClick={handleLogout}>Logout</button>
       </div>
     </div>
   )
 }
-
+ 
 export default Detail
