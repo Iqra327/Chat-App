@@ -56,7 +56,7 @@ function Detail() {
             <span>Shared Photos</span>
             <img src="./arrowDown.png" alt="icon" />
           </div>
-          <div className="photos">
+          {/* <div className="photos">
             <div className="photoItem">
               <div className='photoDetail'>
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmttg1skZoFW3XsKi_lJb9BJe8hm6HvMgsyA&s" alt="img" />
@@ -71,7 +71,7 @@ function Detail() {
               </div>
               <img src="./download.png" alt="icon" className='icon'/>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="option">
           <div className="title">
